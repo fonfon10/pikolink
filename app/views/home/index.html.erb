@@ -1,0 +1,12 @@
+<h1>Home#index</h1>
+
+
+
+      <%= form_tag("/home", method: "post") do %>
+        <%= label_tag(:long_link, "Short Link for:") %>
+        <%= text_field_tag(:long_link) %>
+
+        <%= submit_tag("Generate") %>
+      <% end %>
+
+
