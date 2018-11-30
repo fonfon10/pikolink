@@ -35,6 +35,14 @@ gem 'shortener'
 
 gem 'bootstrap', '~> 4.0'
 
+gem 'activeadmin'
+
+# Plus integrations with:
+gem 'devise'
+gem 'cancan' # or cancancan
+gem 'draper'
+gem 'pundit'
+
 
 
 group :development, :test do
