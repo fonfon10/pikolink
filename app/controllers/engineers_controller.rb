@@ -32,11 +32,20 @@ end
 
 
 
-
 def edit
   @engineer = Engineer.find(params[:id])    
   @companies = Company.all.order('name ASC').map { |i| [i.name, i.id]}
 end
+
+
+def destroy
+
+  @engineer = Engineer.find(params[:id])
+  @engineer.destroy
+  redirect_to engineers_url, notice: "Engineer was successfully destroyed"
+
+end
+
 
 
   private

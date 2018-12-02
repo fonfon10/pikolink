@@ -5,36 +5,48 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+#AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
 
-#User.create!(email: 'slafontaine10@gmail.com', password: 'password', password_confirmation: 'password') 
-#User.create!(email: 'serge.lafontaine@analog.com', password: 'password', password_confirmation: 'password') 
-#User.create!(email: 'serge_lafontaine@hotmail.com', password: 'password', password_confirmation: 'password') 
+@users = []
 
-#u1 = User.first
-#u2 = User.last
-
-#c1 =Company.create!(name: 'ABCDE', user_id: u1.id)
-#c2 = Company.create!(name: 'ACME', user_id: u1.id)
-#c3 = Company.create!(name: 'ADI', user_id: u2.id)
-#c4 = Company.create!(name: 'LTC', user_id: u2.id)
-#c5 = Company.create!(name: 'XYZ', user_id: u2.id)
+@users[0] = User.create!(email: 'slafontaine10@gmail.com', password: 'password', password_confirmation: 'password') 
+@users[1] = User.create!(email: 'serge.lafontaine@analog.com', password: 'password', password_confirmation: 'password') 
+@users[2] = User.create!(email: 'serge_lafontaine@hotmail.com', password: 'password', password_confirmation: 'password') 
 
 
-#e1 = Engineer.create!(firstname: 'Jos', lastname:'Blow', company_id: c1.id, user_id: u1.id)
-#e2 = Engineer.create!(firstname: 'Wayne', lastname:'Gretzky', company_id: c1.id, user_id: u1.id)
-#e3 = Engineer.create!(firstname: 'Mario', lastname:'Lemieux', company_id: c2.id, user_id: u1.id)
-#e4 = Engineer.create!(firstname: 'Jos', lastname:'Sakic', company_id: c3.id, user_id: u1.id)
-#e5 = Engineer.create!(firstname: 'Bill', lastname:'Black', company_id: c3.id, user_id: u1.id)
-#e6 = Engineer.create!(firstname: 'Jos', lastname:'White', company_id: c4.id, user_id: u1.id)
-#e7 = Engineer.create!(firstname: 'Simon', lastname:'Yellow', company_id: c5.id, user_id: u1.id)
+@companies = ["ABCD", "EFGH", "IJKL", "MNOP", "QRST", "UVWX", "YZAB", "CDEF", "GHIJ", "KLMN", "OPQR", "STUV", "WXYZ"]
 
 
 
-#Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e1, fresh: true)
-#Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e2, fresh: true)
-#Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e3, fresh: true)
-#Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e4, fresh: true)
-#Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e5, fresh: true)
-#Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e6, fresh: true)
-#Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e7, fresh: true)
+
+@companies.each do |company|
+
+ @users.each do |user|
+
+	c = Company.create!(name: company, user_id: user.id)
+
+
+			e1 = Engineer.create!(firstname: 'Jos', lastname:'Blow', company_id: c.id, user_id: user.id)
+			e2 = Engineer.create!(firstname: 'James', lastname:'Black', company_id: c.id, user_id: user.id)
+			e3 = Engineer.create!(firstname: 'Bob', lastname:'Yellow', company_id: c.id, user_id: user.id)
+			e4 = Engineer.create!(firstname: 'Serge', lastname:'White', company_id: c.id, user_id: user.id)
+			e5 = Engineer.create!(firstname: 'Wayne', lastname:'Brown', company_id: c.id, user_id: user.id)
+			e6 = Engineer.create!(firstname: 'John', lastname:'Orange', company_id: c.id, user_id: user.id)
+			e7 = Engineer.create!(firstname: 'Phil', lastname:'Purple', company_id: c.id, user_id: user.id)
+	 	
+
+			Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e1, fresh: true, category: "LTM4601")
+			Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e2, fresh: true, category: "LTM4625")
+			Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e3, fresh: true, category: "LTM4644")
+			Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e4, fresh: true, category: "LTM4601")
+			Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e5, fresh: true, category: "LTM4601")
+			Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e6, fresh: true, category: "LTM4601")
+			Shortener::ShortenedUrl.generate("http://www.cnn.com", owner: e7, fresh: true, category: "LTM4601")
+
+
+
+ end
+
+end
+
+

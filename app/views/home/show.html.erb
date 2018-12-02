@@ -12,16 +12,27 @@
     <td><h2><%= @short_link.url %></h2></td>    
   </tr>    
 
+
+
+  <%= url_dev = "http://localhost:3000/"+ @short_link.unique_key %>
+  <%= url_prod = "http://www.pikolink.com/"+ @short_link.unique_key %>
+
   <tr>
-    <td><h2>Short Link:</h2></td>
-    <td><h2> http://localhost:3000/<%= @short_link.unique_key %></h2></td>
+    <td><h2>Dev Short Link:</h2></td>
+    <td><h2><%= link_to @short_link.category, url_dev %></h2></td>
   </tr>
 
   <tr>
-    <td><h2>Short Link:</h2></td>
-    <td><h2> http://www.pikolink.com/<%= @short_link.unique_key %></h2></td>
+    <td><h2>ProductionShort Link:</h2></td>
+    <td><h2><%= link_to @short_link.category, url_prod %></h2></td>
   </tr>
 
   </tbody>
 </table>
 
+
+<%= paginate @short_link %>
+
+<p><%= link_to "another link for "+@short_link.owner.firstname+" "+@short_link.owner.lastname, select_home_path(@short_link.owner_id), method: :put %></p>
+
+<p><%= link_to "another link for New Engineer", root_path %></p>

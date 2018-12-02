@@ -6,11 +6,13 @@
 
 
 
+
 <table class="table table-striped table-responsive">
   <thead>
     <tr>
       <th>URL</th>
-      <th>Unique Key</th>
+      <th>Category</th>
+      <th>Key</th>
       <th>times accessed</th>
       <th>last accessed</th>
       <th>First Name</th>
@@ -21,36 +23,39 @@
   </thead>
 
   <tbody>
-    <% @links.each do |links| %>
+
+    <% @shortened_urls.each do |link| %>
       <tr>
 
         
 
-        <td><%= links.url %></td>
-        <td><%= links.unique_key %></td>
+        <td><%= link.url %></td>
+        <td><%= link.category %></td>
 
-        <td><%= links.use_count %></td>
-        <% if links.use_count > 0 %>
-          <td><%= links.updated_at.strftime("%F") %></td>
+        <td><%= link.unique_key %></td>
+
+        <td><%= link.use_count %></td>
+        <% if link.use_count > 0 %>
+          <td><%= link.updated_at.strftime("%F") %></td>
           <% else %>
             <td></td>
         <% end %>
 
 
 
-      <% if links.owner != nil %>
+      <% if link.owner != nil %>
 
-          <td><%= links.owner.firstname %></td>
-          <td><%= links.owner.lastname %></td>
+          <td><%= link.owner.firstname %></td>
+          <td><%= link.owner.lastname %></td>
 
           <% else %>
             <td></td>
       <% end %>
 
 
-      <% if links.owner.company != nil %>
+      <% if link.owner.company != nil %>
 
-          <td><%= links.owner.company.name %></td>
+          <td><%= link.owner.company.name %></td>
           <% else %>
             <td></td>
       <% end %>
@@ -64,6 +69,10 @@
     <% end %>
   </tbody>
 </table>
+
+
+
+<%= paginate @shortened_urls %>
 
 
 
