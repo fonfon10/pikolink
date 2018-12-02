@@ -1,0 +1,39 @@
+
+<div class="row">
+  <div class="col-sm-12 text-xs-center bootstrap-welcome">
+
+
+
+
+  <% if user_signed_in?  %>
+
+    <br><br>
+
+      <h2>Engineer: <%= @thisengineer.firstname %> <%= @thisengineer.lastname %></h2>
+      <h2>Company: <%= @thisengineer.company.name %></h2>
+
+      <hr>
+
+
+
+      <%= form_tag("/home", method: "post") do %>
+        <%= label_tag(:long_link, "Short Link for:") %>
+        <%= text_field_tag(:long_link) %>
+
+        <%= hidden_field_tag :engineer, @thisengineer.id %>
+
+
+        <%= submit_tag("Generate") %>
+      <% end %>
+
+
+
+  <% else %>
+    <h2>PLEASE LOGIN</h2>
+
+  <% end %>
+
+
+
+  </div>
+</div>

@@ -1,14 +1,33 @@
 Rails.application.routes.draw do
+
+
+  resources :companies
+
+  get 'dashboard/show'
+
+  
+  resources :engineers do 
+    resources :home do 
+    end
+  end
+
+
+
+  resources :home do 
+    member do
+     put "select", to: "home#select"
+    end
+   end
+
+
   devise_for :users
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-resources :home
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
 
 get '/:id' => "shortener/shortened_urls#show"
 
 
-root to: 'home#index'
+  root to: "engineers#index"
 
 end

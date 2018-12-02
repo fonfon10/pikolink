@@ -1,14 +1,32 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Pikolink</title>
-    <%= csrf_meta_tags %>
+<html lang="en">
+    <head>
+      <!-- Required meta tags always come first -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </head>
+      <title>Skeleton</title>
 
-  <body>
-    <%= yield %>
-  </body>
+      <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+      <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+      <%= csrf_meta_tags %>
+
+    </head>
+    <body>
+    <%= render 'layouts/navbar'  %>
+
+    <%= render partial: 'shared/flash' unless flash.empty? %>
+
+
+
+
+    <div id="main-container" class="container-fluid">
+        <%= yield %>
+    </div>
+    
+
+
+    </body>
 </html>
+

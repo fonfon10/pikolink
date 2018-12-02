@@ -1,24 +1,34 @@
-<h1>Home#index</h1>
+
+<div class="row">
+  <div class="col-sm-12 text-xs-center bootstrap-welcome">
 
 
+
+
+  <% if user_signed_in?  %>
+ 
       <%= form_tag("/home", method: "post") do %>
-        <%= label_tag(:long_link, "Short Link for:") %>
+        <%= label_tag(:long_link, "Search for:") %>
         <%= text_field_tag(:long_link) %>
-
-        <%= submit_tag("Generate") %>
+        <%= submit_tag("Search") %>
       <% end %>
 
 
+  <h2>LINK:  <%= @link %></h2>
 
 
-<% if user_signed_in? %>
-<%= current_user.email %>
+    <p><%= link_to 'generate', home_path(current_user) %></p>
 
-  <li>
-  <%= link_to('Logout', destroy_user_session_path, method: :delete) %>        
-  </li>
-<% else %>
-  <li>
-  <%= link_to('Login', new_user_session_path)  %>  
-  </li>
-<% end %>
+
+
+
+  <% else %>
+    <%= link_to "Sign in", new_user_session_path %><br />
+
+
+  <% end %>
+
+
+
+  </div>
+</div>

@@ -33,7 +33,7 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'shortener'
 
-gem 'bootstrap', '~> 4.0'
+gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
 
 gem 'activeadmin'
 
@@ -43,7 +43,8 @@ gem 'cancan' # or cancancan
 gem 'draper'
 gem 'pundit'
 
-
+gem 'will_paginate'
+gem 'ransack'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

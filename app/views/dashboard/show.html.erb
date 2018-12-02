@@ -1,0 +1,70 @@
+<p id="notice"><%= notice %></p>
+
+<h1>DASHBOARD</h1>
+
+
+
+
+
+<table class="table table-striped table-responsive">
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>Unique Key</th>
+      <th>times accessed</th>
+      <th>last accessed</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Company</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @links.each do |links| %>
+      <tr>
+
+        
+
+        <td><%= links.url %></td>
+        <td><%= links.unique_key %></td>
+
+        <td><%= links.use_count %></td>
+        <% if links.use_count > 0 %>
+          <td><%= links.updated_at.strftime("%F") %></td>
+          <% else %>
+            <td></td>
+        <% end %>
+
+
+
+      <% if links.owner != nil %>
+
+          <td><%= links.owner.firstname %></td>
+          <td><%= links.owner.lastname %></td>
+
+          <% else %>
+            <td></td>
+      <% end %>
+
+
+      <% if links.owner.company != nil %>
+
+          <td><%= links.owner.company.name %></td>
+          <% else %>
+            <td></td>
+      <% end %>
+
+
+    
+
+
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+
+<br>

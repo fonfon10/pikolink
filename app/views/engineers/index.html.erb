@@ -1,0 +1,60 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Engineers</h1>
+
+
+<%= search_form_for @q do |f| %>
+
+  <%= f.search_field :firstname_or_lastname_or_company_name_cont %>
+
+  <%= f.submit %>
+<% end %>
+
+
+
+
+
+<table class="table table-striped table-responsive">
+  <thead>
+    <tr>
+      <th>Select</th>
+      <th><%= sort_link(@q, :firstname, 'Firstname', default_order: :desc) %></th>
+      <th><%= sort_link(@q, :lastname, 'Lastname', default_order: :desc) %></th>
+      <th><%= sort_link(@q, :company_name, 'Company', default_order: :desc) %></th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @engineers.each do |engineer| %>
+      <tr>
+        <td> <%= link_to select_home_path(engineer), method: :put  do %>
+                <i class="glyphicon glyphicon-unchecked "></i>
+                <% end %> </td>
+        <td><%= engineer.firstname %></td>
+        <td><%= engineer.lastname %></td>
+        <td><%= engineer.company.name %></td>
+
+        <td> <%= link_to edit_engineer_path(engineer) do %>
+                <i class="glyphicon glyphicon-pencil "></i>
+                <% end %> </td>
+
+        <td> <%= link_to engineer, method: :delete, data: { confirm: 'Are you sure?' }  do %>
+                <i class="glyphicon glyphicon-trash "></i>
+                <% end %> </td>
+
+
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<button type="button" class="btn btn-default">
+  <%= link_to 'New Engineer', new_engineer_path %>
+</button>
+<button type="button" class="btn btn-default">
+  <%= link_to 'New Company', new_company_path %>
+</button>

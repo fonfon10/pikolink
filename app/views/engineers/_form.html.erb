@@ -1,0 +1,27 @@
+<%= form_for(@engineer) do |f| %>
+
+
+
+  <div class="field">
+    <%= f.label :company %>
+    <%= select_tag(:company_id, options_for_select(@companies), :selected => :company_id)%>
+    
+    <%= link_to "Create New Company", new_company_path %>
+
+  </div>
+
+  <div class="field">
+    <%= f.label :firstname %>
+    <%= f.text_field :firstname %>
+  </div>
+
+  <div class="field">
+    <%= f.label :lastname %>
+    <%= f.text_field :lastname %>
+  </div>
+
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
