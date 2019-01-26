@@ -26,20 +26,20 @@
   </thead>
 
   <tbody>
-    <% @engineers.each do |engineer| %>
+    <% @owners.each do |owner| %>
       <tr>
-        <td> <%= link_to select_home_path(engineer), method: :put  do %>
+        <td> <%= link_to select_home_path(owner), method: :put  do %>
                 <i class="glyphicon glyphicon-unchecked "></i>
                 <% end %> </td>
-        <td><%= engineer.firstname %></td>
-        <td><%= engineer.lastname %></td>
-        <td><%= engineer.company.name %></td>
+        <td><%= owner.firstname %></td>
+        <td><%= owner.lastname %></td>
+        <td><%= owner.company.name %></td>
 
-        <td> <%= link_to edit_engineer_path(engineer) do %>
+        <td> <%= link_to edit_owner_path(owner) do %>
                 <i class="glyphicon glyphicon-pencil "></i>
                 <% end %> </td>
 
-        <td> <%= link_to engineer, method: :delete, data: { confirm: 'Are you sure?' }  do %>
+        <td> <%= link_to owner, method: :delete, data: { confirm: 'Are you sure?' }  do %>
                 <i class="glyphicon glyphicon-trash "></i>
                 <% end %> </td>
 
@@ -53,7 +53,7 @@
 <br>
 
 <button type="button" class="btn btn-default">
-  <%= link_to 'New Engineer', new_engineer_path %>
+  <%= link_to 'New Engineer', new_owner_path %>
 </button>
 <button type="button" class="btn btn-default">
   <%= link_to 'New Company', new_company_path %>

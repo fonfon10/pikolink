@@ -9,8 +9,8 @@
 
     <br><br>
 
-      <h2>Engineer: <%= @thisengineer.firstname %> <%= @thisengineer.lastname %></h2>
-      <h2>Company: <%= @thisengineer.company.name %></h2>
+      <h2>Engineer: <%= @thisowner.firstname %> <%= @thisowner.lastname %></h2>
+      <h2>Company: <%= @thisowner.company.name %></h2>
 
       <hr>
 
@@ -23,7 +23,7 @@
         <%= label_tag(:category, "Category for:") %>
         <%= text_field_tag(:category) %>
 
-        <%= hidden_field_tag :engineer, @thisengineer.id %>
+        <%= hidden_field_tag :owner, @thisowner.id %>
 
 
         <%= submit_tag("Generate") %>

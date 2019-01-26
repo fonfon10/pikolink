@@ -1,5 +1,5 @@
 class Company < ApplicationRecord
-  has_many :engineers
+  has_many :owners
   belongs_to :user
 
 

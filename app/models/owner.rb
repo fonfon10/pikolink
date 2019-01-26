@@ -1,4 +1,4 @@
-class Engineer < ApplicationRecord
+class Owner < ApplicationRecord
 
 #	has_many :owners
 #	has_many :users, through: :owners

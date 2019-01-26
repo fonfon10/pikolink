@@ -6,8 +6,8 @@ end
 
 
 def select
-	@thisengineer = Engineer.find(params[:id])
-  thisengineer = @thisengineer.id
+	@thisowner = Owner.find(params[:id])
+  thisowner = @thisowner.id
 
 end
 
@@ -18,12 +18,12 @@ def create
     @link = params[:long_link]
     @category = params[:category]
 
-		@thisengineer = Engineer.find(params[:engineer])
+		@thisowner = Owner.find(params[:owner])
 
     puts ("Current User:"+current_user.email.to_s)
-    puts ("engineer:"+@thisengineer.firstname.to_s)
+    puts ("engineer:"+@thisowner.firstname.to_s)
 
-    @short_link = Shortener::ShortenedUrl.generate(@link, owner: @thisengineer, fresh: true, category: @category)
+    @short_link = Shortener::ShortenedUrl.generate(@link, owner: @thisowner, fresh: true, category: @category)
     redirect_to home_path(@short_link.id)
   end 
 end

@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get 'dashboard/show'
 
   
-  resources :engineers do 
+  resources :owners do 
     resources :home do 
     end
   end
@@ -24,12 +24,12 @@ Rails.application.routes.draw do
     end
    end
 
-
+resources :dashboard
 
 
 get '/:id' => "shortener/shortened_urls#show"
 
 
-  root to: "engineers#index"
+  root to: "owners#index"
 
 end

@@ -3,23 +3,29 @@ class DashboardController < ApplicationController
   before_action :authenticate_user!
 
 
-  def show
+  def index
 
 
 	#user = User.find(current_user)
-	@engineers = current_user.engineers
+	@owners = current_user.owners
 
-	engineers_id = []
+	owners_id = []
 
-	@engineers.each do |engineer|
+	@owners.each do |owner|
 
-		engineers_id << engineer.id
+		owners_id << owner.id
 
 	end
 
 
-    @q = Shortener::ShortenedUrl.where("owner_id IN (?)",engineers_id).ransack(params[:q])
-    @shortened_urls = @q.result.includes(:owner).order(:owner_id).page params[:page]
+#    @q = Shortener::ShortenedUrl.where("owner_id IN (?)",owners_id).ransack(params[:q])
+    @q = Shortener::ShortenedUrl.where("owner_id IN (?)",owners_id).ransack(owner_firstname_or_owner_lastname_or_owner_company_name_cont: params[:serge])
+    @dashboards = @q.result.includes(:owner).order(:owner_id).page params[:page]
+
+
+
+
+
 
 
   

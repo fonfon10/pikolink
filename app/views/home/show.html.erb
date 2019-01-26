@@ -31,7 +31,6 @@
 </table>
 
 
-<%= paginate @short_link %>
 
 <p><%= link_to "another link for "+@short_link.owner.firstname+" "+@short_link.owner.lastname, select_home_path(@short_link.owner_id), method: :put %></p>
 

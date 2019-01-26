@@ -11,7 +11,7 @@ class User < ApplicationRecord
 #	has_many :owners
 #	has_many :engineers, through: :owners
 	has_many :companies
-	has_many :engineers
+	has_many :owners
 
 
 
