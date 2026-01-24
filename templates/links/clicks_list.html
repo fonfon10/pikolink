@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <body>
+    <h1>Create link</h1>
+
+    <p>
+      <a href="/app/links">Back</a>
+      |
+      <a id="newCustomer" href="/app/customers/new?next=/app/links/new" target="_blank">Create a new customer</a>
+    </p>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Create</button>
+    </form>
+
+    <script>
+      (function () {
+        const a = document.getElementById("newCustomer");
+        if (!a) return;
+
+        const params = new URLSearchParams();
+
+        const dest = document.getElementById("id_destination_url");
+        const camp = document.getElementById("id_campaign_name");
+        const notes = document.getElementById("id_notes");
+        const cust = document.getElementById("id_customer");
+
+        if (dest && dest.value) params.set("destination_url", dest.value);
+        if (camp && camp.value) params.set("campaign_name", camp.value);
+        if (notes && notes.value) params.set("notes", notes.value);
+        if (cust && cust.value) params.set("customer", cust.value);
+
+        const next = "/app/links/new?" + params.toString();
+        a.href = "/app/customers/new?next=" + encodeURIComponent(next);
+      })();
+    </script>
+  </body>
+</html>

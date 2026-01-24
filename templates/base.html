@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pikolink</title>
+</head>
+<body>
+  <div style="max-width: 900px; margin: 24px auto; padding: 0 16px;">
+    <nav style="margin-bottom: 16px;">
+      <a href="/app/links">Links</a>
+      &nbsp;|&nbsp;
+      <a href="/app/links/new">Create link</a>
+      &nbsp;|&nbsp;
+      <a href="/admin/">Admin</a>
+      &nbsp;|&nbsp;
+      <a href="/logout/">Logout</a>
+    </nav>
+
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

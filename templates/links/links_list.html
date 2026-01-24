@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <body>
+    <h1>Links</h1>
+
+    <p>
+      <a href="/app/links/new">Create link</a> |
+      <a href="/app/customers/new">Create customer</a> |
+      <a href="/app/clicks">Clicks</a> |
+      <a href="/accounts/logout/">Logout</a>
+    </p>
+
+    <table border="1" cellpadding="6">
+      <tr>
+        <th>Code</th>
+        <th>Destination</th>
+        <th>Customers</th>
+        <th>Clicks</th>
+        <th>First click</th>
+        <th>Last click</th>
+      </tr>
+
+      {% for link in links %}
+      <tr>
+        <td><a href="{% url 'redirect_link' link.code %}">{{ link.code }}</a></td>
+        <td>{{ link.destination_url }}</td>
+        <td>{{ link.customer }}</td>
+        <td>{{ link.click_count }}</td>
+        <td>{{ link.first_click|default:"" }}</td>
+        <td>{{ link.last_click|default:"" }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>
