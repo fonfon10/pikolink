@@ -131,3 +131,18 @@ def redirect_link(request, code):
     )
 
     return redirect(link.destination_url, permanent=True)
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Click
+
+@login_required
+def clicks_list(request):
+    clicks = (
+        Click.objects
+        .filter(link__created_by=request.user)
+        .select_related("link", "customer")
+        .order_by("-clicked_at")
+    )
+    return render(request, "links/clicks_list.html", {"clicks": clicks})
