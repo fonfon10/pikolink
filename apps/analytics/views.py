@@ -1,5 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.http import JsonResponse
+from django.shortcuts import render
 
 from apps.analytics.models import Click
 
@@ -19,3 +21,8 @@ def recent_clicks_api(request):
         for c in clicks.select_related('link')
     ]
     return JsonResponse({'clicks': data})
+
+
+@login_required
+def realtime(request):
+    return render(request, 'analytics/realtime.html')

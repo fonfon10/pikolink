@@ -2,4 +2,44 @@
 {% block title %}Real-Time Analytics - PikoLink{% endblock %}
 {% block content %}
 <h2 class="text-2xl font-bold mb-6">Real-Time Clicks</h2>
+<div class="bg-white shadow rounded-lg overflow-hidden">
+  <table class="w-full text-left">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">Link</th>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">Country</th>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">City</th>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">Time</th>
+      </tr>
+    </thead>
+    <tbody id="clicks-body">
+      <tr><td colspan="4" class="px-4 py-8 text-center text-gray-400">Loading...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+function fetchClicks() {
+  fetch('/analytics/api/recent-clicks/')
+    .then(r => r.json())
+    .then(data => {
+      const tbody = document.getElementById('clicks-body');
+      if (!data.clicks.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-8 text-center text-gray-400">No clicks yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.clicks.map(c =>
+        `<tr class="border-t">
+          <td class="px-4 py-2 text-indigo-600">${c.link}</td>
+          <td class="px-4 py-2">${c.country || '—'}</td>
+          <td class="px-4 py-2">${c.city || '—'}</td>
+          <td class="px-4 py-2 text-sm text-gray-500">${new Date(c.time).toLocaleString()}</td>
+        </tr>`
+      ).join('');
+    })
+    .catch(() => {});
+}
+fetchClicks();
+setInterval(fetchClicks, 5000);
+</script>
 {% endblock %}

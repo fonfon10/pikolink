@@ -1,5 +1,40 @@
 {% extends "base.html" %}
 {% block title %}Dashboard - PikoLink{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-6">Your Links</h2>
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-2xl font-bold">Your Links</h2>
+  <a href="{% url 'links:create_link' %}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Create Link</a>
+</div>
+
+{% if links %}
+<div class="bg-white shadow rounded-lg overflow-hidden">
+  <table class="w-full text-left">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">Short Code</th>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">Original URL</th>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">Clicks</th>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">Created</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for link in links %}
+      <tr class="border-t hover:bg-gray-50">
+        <td class="px-4 py-3">
+          <a href="{% url 'links:link_detail' link.pk %}" class="text-indigo-600 hover:underline">{{ link.short_code }}</a>
+        </td>
+        <td class="px-4 py-3 text-sm text-gray-700 truncate max-w-xs">{{ link.original_url }}</td>
+        <td class="px-4 py-3">{{ link.click_count }}</td>
+        <td class="px-4 py-3 text-sm text-gray-500">{{ link.created_at|date:"M d, Y" }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="bg-white shadow rounded-lg p-8 text-center text-gray-500">
+  <p>You haven't created any links yet.</p>
+  <a href="{% url 'links:create_link' %}" class="mt-4 inline-block text-indigo-600 hover:underline">Create your first link</a>
+</div>
+{% endif %}
 {% endblock %}

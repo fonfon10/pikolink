@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.http import HttpResponse, HttpResponseGone, HttpResponsePermanentRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.analytics.models import Click
+from apps.links.forms import LinkCreateForm
 from apps.links.models import Link
+from apps.links.utils import generate_short_code
 
 
 def home(request):
@@ -13,7 +15,23 @@ def home(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'links/dashboard.html')
+    links = Link.objects.filter(owner=request.user).order_by('-created_at')
+    return render(request, 'links/dashboard.html', {'links': links})
+
+
+@login_required
+def create_link(request):
+    if request.method == 'POST':
+        form = LinkCreateForm(request.POST)
+        if form.is_valid():
+            link = form.save(commit=False)
+            link.owner = request.user
+            link.short_code = generate_short_code()
+            link.save()
+            return redirect('links:dashboard')
+    else:
+        form = LinkCreateForm()
+    return render(request, 'links/link_create.html', {'form': form})
 
 
 @login_required
