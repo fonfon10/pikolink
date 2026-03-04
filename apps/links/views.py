@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.http import HttpResponse, HttpResponseGone, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, render
 
@@ -13,6 +14,30 @@ def home(request):
 @login_required
 def dashboard(request):
     return render(request, 'links/dashboard.html')
+
+
+@login_required
+def link_detail(request, pk):
+    link = get_object_or_404(Link, pk=pk, owner=request.user)
+    top_countries = (
+        Click.objects.filter(link=link)
+        .exclude(country='')
+        .values('country')
+        .annotate(count=Count('id'))
+        .order_by('-count')[:10]
+    )
+    top_cities = (
+        Click.objects.filter(link=link)
+        .exclude(city='')
+        .values('city')
+        .annotate(count=Count('id'))
+        .order_by('-count')[:5]
+    )
+    return render(request, 'links/link_detail.html', {
+        'link': link,
+        'top_countries': top_countries,
+        'top_cities': top_cities,
+    })
 
 
 def _get_client_ip(request):

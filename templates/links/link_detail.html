@@ -1,5 +1,41 @@
 {% extends "base.html" %}
-{% block title %}Link Detail - PikoLink{% endblock %}
+{% block title %}{{ link.short_code }} - Link Detail - PikoLink{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-6">Link Detail</h2>
+<div class="max-w-4xl mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Link Detail</h2>
+
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <p class="mb-2"><span class="font-semibold">Short URL:</span> {{ link.get_short_url }}</p>
+    <p class="mb-2"><span class="font-semibold">Original URL:</span> <a href="{{ link.original_url }}" class="text-blue-600 hover:underline">{{ link.original_url }}</a></p>
+    <p class="mb-2"><span class="font-semibold">Total Clicks:</span> {{ link.click_count }}</p>
+  </div>
+
+  {% if top_countries %}
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h3 class="text-lg font-semibold mb-4">Top Countries</h3>
+    <table class="w-full text-left">
+      <thead><tr><th class="pb-2">Country</th><th class="pb-2">Clicks</th></tr></thead>
+      <tbody>
+      {% for row in top_countries %}
+        <tr class="border-t"><td class="py-1">{{ row.country }}</td><td class="py-1">{{ row.count }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  {% if top_cities %}
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h3 class="text-lg font-semibold mb-4">Top Cities</h3>
+    <table class="w-full text-left">
+      <thead><tr><th class="pb-2">City</th><th class="pb-2">Clicks</th></tr></thead>
+      <tbody>
+      {% for row in top_cities %}
+        <tr class="border-t"><td class="py-1">{{ row.city }}</td><td class="py-1">{{ row.count }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
 {% endblock %}
