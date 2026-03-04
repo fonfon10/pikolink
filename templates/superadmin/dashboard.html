@@ -1,5 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Super Admin - PikoLink{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-6">Platform Overview</h2>
+<div class="max-w-6xl mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Platform Overview</h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white shadow rounded-lg p-6 text-center">
+      <p class="text-3xl font-bold text-indigo-600">{{ stats.total_users }}</p>
+      <p class="text-gray-500 text-sm mt-1">Total Users</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6 text-center">
+      <p class="text-3xl font-bold text-indigo-600">{{ stats.total_links }}</p>
+      <p class="text-gray-500 text-sm mt-1">Total Links</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6 text-center">
+      <p class="text-3xl font-bold text-indigo-600">{{ stats.clicks_today }}</p>
+      <p class="text-gray-500 text-sm mt-1">Clicks Today</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6 text-center">
+      <p class="text-3xl font-bold text-indigo-600">{{ stats.new_signups_7d }}</p>
+      <p class="text-gray-500 text-sm mt-1">New Users (7d)</p>
+    </div>
+  </div>
+
+  <div class="flex space-x-4">
+    <a href="{% url 'super_admin_users' %}" class="bg-white shadow rounded-lg px-6 py-4 hover:bg-gray-50 text-indigo-600 font-medium">Manage Users</a>
+    <a href="{% url 'super_admin_links' %}" class="bg-white shadow rounded-lg px-6 py-4 hover:bg-gray-50 text-indigo-600 font-medium">Manage Links</a>
+    <a href="{% url 'super_admin_teams' %}" class="bg-white shadow rounded-lg px-6 py-4 hover:bg-gray-50 text-indigo-600 font-medium">Manage Teams</a>
+  </div>
+</div>
 {% endblock %}

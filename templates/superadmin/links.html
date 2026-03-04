@@ -1,5 +1,35 @@
 {% extends "base.html" %}
 {% block title %}All Links - PikoLink Admin{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-6">All Links</h2>
+<div class="max-w-6xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">All Links</h2>
+    <a href="{% url 'super_admin_dashboard' %}" class="text-indigo-600 hover:underline">Back to Dashboard</a>
+  </div>
+
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <table class="w-full text-left">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3 text-sm font-semibold text-gray-600">Short Code</th>
+          <th class="px-4 py-3 text-sm font-semibold text-gray-600">Owner</th>
+          <th class="px-4 py-3 text-sm font-semibold text-gray-600">Clicks</th>
+          <th class="px-4 py-3 text-sm font-semibold text-gray-600">Created</th>
+          <th class="px-4 py-3 text-sm font-semibold text-gray-600">Active</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for link in links %}
+        <tr class="border-t hover:bg-gray-50">
+          <td class="px-4 py-3 text-indigo-600">{{ link.short_code }}</td>
+          <td class="px-4 py-3 text-sm">{{ link.owner.email }}</td>
+          <td class="px-4 py-3">{{ link.click_count }}</td>
+          <td class="px-4 py-3 text-sm text-gray-500">{{ link.created_at|date:"M d, Y" }}</td>
+          <td class="px-4 py-3">{% if link.is_active %}Yes{% else %}No{% endif %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}
