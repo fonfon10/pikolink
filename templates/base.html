@@ -12,9 +12,19 @@
   <nav class="bg-white shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <a href="/" class="text-xl font-bold text-indigo-600">PikoLink</a>
-      <div class="flex items-center space-x-4">
+
+      <!-- Mobile menu button -->
+      <button id="menu-toggle" class="md:hidden text-gray-600 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <!-- Desktop nav -->
+      <div class="hidden md:flex items-center space-x-4">
         {% if user.is_authenticated %}
           <a href="/dashboard/" class="text-gray-600 hover:text-indigo-600">Dashboard</a>
+          <a href="/analytics/realtime/" class="text-gray-600 hover:text-indigo-600">Real-Time</a>
           <a href="/teams/" class="text-gray-600 hover:text-indigo-600">Teams</a>
           {% if user.is_super_admin %}
             <a href="/super-admin/" class="text-gray-600 hover:text-indigo-600">Admin</a>
@@ -29,9 +39,30 @@
         {% endif %}
       </div>
     </div>
+
+    <!-- Mobile nav -->
+    <div id="mobile-menu" class="hidden md:hidden border-t">
+      <div class="px-4 py-3 space-y-2">
+        {% if user.is_authenticated %}
+          <a href="/dashboard/" class="block text-gray-600 hover:text-indigo-600 py-1">Dashboard</a>
+          <a href="/analytics/realtime/" class="block text-gray-600 hover:text-indigo-600 py-1">Real-Time</a>
+          <a href="/teams/" class="block text-gray-600 hover:text-indigo-600 py-1">Teams</a>
+          {% if user.is_super_admin %}
+            <a href="/super-admin/" class="block text-gray-600 hover:text-indigo-600 py-1">Admin</a>
+          {% endif %}
+          <form method="post" action="{% url 'account_logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="block text-gray-600 hover:text-indigo-600 py-1">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'account_login' %}" class="block text-gray-600 hover:text-indigo-600 py-1">Login</a>
+          <a href="{% url 'account_signup' %}" class="block text-indigo-600 font-medium py-1">Sign Up</a>
+        {% endif %}
+      </div>
+    </div>
   </nav>
 
-  <main class="max-w-6xl mx-auto px-4 py-8 flex-1">
+  <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
     {% if messages %}
       <div class="mb-4">
         {% for message in messages %}
@@ -49,5 +80,11 @@
       &copy; 2026 PikoLink. All rights reserved.
     </div>
   </footer>
+
+  <script>
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+  </script>
 </body>
 </html>

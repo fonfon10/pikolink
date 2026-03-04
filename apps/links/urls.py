@@ -9,4 +9,5 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('links/create/', views.create_link, name='create_link'),
     path('links/<int:pk>/', views.link_detail, name='link_detail'),
+    path('links/<int:pk>/delete/', views.delete_link, name='delete_link'),
 ]

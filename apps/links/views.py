@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from django.http import HttpResponse, HttpResponseGone, HttpResponsePermanentRedirect
+from django.http import HttpResponseGone, HttpResponseNotAllowed, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.analytics.models import Click
@@ -36,6 +36,10 @@ def create_link(request):
 
 @login_required
 def link_detail(request, pk):
+    from datetime import timedelta
+    from django.db.models.functions import TruncDate
+    from django.utils import timezone
+
     link = get_object_or_404(Link, pk=pk, owner=request.user)
     top_countries = (
         Click.objects.filter(link=link)
@@ -51,11 +55,37 @@ def link_detail(request, pk):
         .annotate(count=Count('id'))
         .order_by('-count')[:5]
     )
+    # 30-day click chart data
+    thirty_days_ago = timezone.now() - timedelta(days=30)
+    daily_clicks = (
+        Click.objects.filter(link=link, clicked_at__gte=thirty_days_ago)
+        .annotate(day=TruncDate('clicked_at'))
+        .values('day')
+        .annotate(count=Count('id'))
+        .order_by('day')
+    )
+    max_daily = max((d['count'] for d in daily_clicks), default=1)
+    recent_clicks = (
+        Click.objects.filter(link=link)
+        .order_by('-clicked_at')[:10]
+    )
     return render(request, 'links/link_detail.html', {
         'link': link,
         'top_countries': top_countries,
         'top_cities': top_cities,
+        'daily_clicks': daily_clicks,
+        'max_daily': max_daily,
+        'recent_clicks': recent_clicks,
     })
+
+
+@login_required
+def delete_link(request, pk):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    link = get_object_or_404(Link, pk=pk, owner=request.user)
+    link.delete()
+    return redirect('links:dashboard')
 
 
 def _get_client_ip(request):

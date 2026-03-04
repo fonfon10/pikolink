@@ -82,6 +82,45 @@ class TestCreateLinkView:
 
 
 @pytest.mark.django_db
+class TestDeleteLinkView:
+    def test_delete_link_removes_link(self, client):
+        """POST to delete endpoint removes the link."""
+        user = UserFactory()
+        link = LinkFactory(owner=user, short_code='del01')
+        client.force_login(user)
+        response = client.post(f'/links/{link.pk}/delete/')
+        assert not Link.objects.filter(pk=link.pk).exists()
+
+    def test_delete_link_redirects_to_dashboard(self, client):
+        """After deleting, user is redirected to dashboard."""
+        user = UserFactory()
+        link = LinkFactory(owner=user, short_code='del02')
+        client.force_login(user)
+        response = client.post(f'/links/{link.pk}/delete/')
+        assert response.status_code == 302
+        assert '/dashboard/' in response['Location']
+
+    def test_cannot_delete_other_users_link(self, client):
+        """Users cannot delete links they don't own."""
+        owner = UserFactory()
+        other = UserFactory()
+        link = LinkFactory(owner=owner, short_code='del03')
+        client.force_login(other)
+        response = client.post(f'/links/{link.pk}/delete/')
+        assert response.status_code == 404
+        assert Link.objects.filter(pk=link.pk).exists()
+
+    def test_delete_requires_post(self, client):
+        """GET requests to delete endpoint are not allowed."""
+        user = UserFactory()
+        link = LinkFactory(owner=user, short_code='del04')
+        client.force_login(user)
+        response = client.get(f'/links/{link.pk}/delete/')
+        assert response.status_code == 405
+        assert Link.objects.filter(pk=link.pk).exists()
+
+
+@pytest.mark.django_db
 class TestRealtimeView:
     def test_realtime_page_loads(self, client):
         """The real-time analytics page returns 200 for authenticated users."""

@@ -2,22 +2,37 @@
 {% block title %}{{ link.short_code }} - Link Detail - PikoLink{% endblock %}
 {% block content %}
 <div class="max-w-4xl mx-auto">
-  <h2 class="text-2xl font-bold mb-6">Link Detail</h2>
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">Link Detail</h2>
+    <a href="{% url 'links:dashboard' %}" class="text-indigo-600 hover:underline text-sm">Back to Dashboard</a>
+  </div>
 
   <div class="bg-white shadow rounded-lg p-6 mb-6">
     <p class="mb-2"><span class="font-semibold">Short URL:</span> {{ link.get_short_url }}</p>
-    <p class="mb-2"><span class="font-semibold">Original URL:</span> <a href="{{ link.original_url }}" class="text-blue-600 hover:underline">{{ link.original_url }}</a></p>
+    <p class="mb-2"><span class="font-semibold">Original URL:</span> <a href="{{ link.original_url }}" class="text-blue-600 hover:underline break-all">{{ link.original_url }}</a></p>
     <p class="mb-2"><span class="font-semibold">Total Clicks:</span> {{ link.click_count }}</p>
+    <p class="text-sm text-gray-500">Created {{ link.created_at|date:"M d, Y" }}</p>
   </div>
+
+  {% if daily_clicks %}
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h3 class="text-lg font-semibold mb-4">Clicks (Last 30 Days)</h3>
+    <div class="flex items-end space-x-1" style="height: 120px;">
+      {% for day in daily_clicks %}
+        <div class="flex-1 bg-indigo-500 rounded-t" style="height: {% widthratio day.count max_daily 100 %}%;" title="{{ day.day|date:'M d' }}: {{ day.count }} clicks"></div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 
   {% if top_countries %}
   <div class="bg-white shadow rounded-lg p-6 mb-6">
     <h3 class="text-lg font-semibold mb-4">Top Countries</h3>
     <table class="w-full text-left">
-      <thead><tr><th class="pb-2">Country</th><th class="pb-2">Clicks</th></tr></thead>
+      <thead><tr><th class="pb-2 text-sm font-semibold text-gray-600">Country</th><th class="pb-2 text-sm font-semibold text-gray-600">Clicks</th></tr></thead>
       <tbody>
       {% for row in top_countries %}
-        <tr class="border-t"><td class="py-1">{{ row.country }}</td><td class="py-1">{{ row.count }}</td></tr>
+        <tr class="border-t"><td class="py-2">{{ row.country }}</td><td class="py-2">{{ row.count }}</td></tr>
       {% endfor %}
       </tbody>
     </table>
@@ -28,10 +43,34 @@
   <div class="bg-white shadow rounded-lg p-6 mb-6">
     <h3 class="text-lg font-semibold mb-4">Top Cities</h3>
     <table class="w-full text-left">
-      <thead><tr><th class="pb-2">City</th><th class="pb-2">Clicks</th></tr></thead>
+      <thead><tr><th class="pb-2 text-sm font-semibold text-gray-600">City</th><th class="pb-2 text-sm font-semibold text-gray-600">Clicks</th></tr></thead>
       <tbody>
       {% for row in top_cities %}
-        <tr class="border-t"><td class="py-1">{{ row.city }}</td><td class="py-1">{{ row.count }}</td></tr>
+        <tr class="border-t"><td class="py-2">{{ row.city }}</td><td class="py-2">{{ row.count }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  {% if recent_clicks %}
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h3 class="text-lg font-semibold mb-4">Recent Clicks</h3>
+    <table class="w-full text-left">
+      <thead>
+        <tr>
+          <th class="pb-2 text-sm font-semibold text-gray-600">Time</th>
+          <th class="pb-2 text-sm font-semibold text-gray-600">Country</th>
+          <th class="pb-2 text-sm font-semibold text-gray-600">City</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for click in recent_clicks %}
+        <tr class="border-t">
+          <td class="py-2 text-sm text-gray-500">{{ click.clicked_at|date:"M d, H:i" }}</td>
+          <td class="py-2">{{ click.country|default:"—" }}</td>
+          <td class="py-2">{{ click.city|default:"—" }}</td>
+        </tr>
       {% endfor %}
       </tbody>
     </table>
