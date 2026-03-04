@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Sign Up - PikoLink{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Create an Account</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 mt-4">Sign Up</button>
+  </form>
+  <p class="mt-4 text-center text-gray-600">Already have an account? <a href="/accounts/login/" class="text-indigo-600">Login</a></p>
+</div>
+{% endblock %}

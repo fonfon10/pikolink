@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}PikoLink - Shorten Your Links{% endblock %}
+
+{% block content %}
+<div class="text-center py-16">
+  <h1 class="text-5xl font-bold text-gray-900 mb-4">Shorten Your Links</h1>
+  <p class="text-xl text-gray-600 mb-8">Create short, memorable links and track their performance.</p>
+
+  {% if user.is_authenticated %}
+    <div class="max-w-xl mx-auto">
+      <a href="/links/create/" class="bg-indigo-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-indigo-700 inline-block">
+        Create a Short Link
+      </a>
+    </div>
+  {% else %}
+    <div class="max-w-xl mx-auto">
+      <a href="/accounts/signup/" class="bg-indigo-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-indigo-700 inline-block">
+        Get Started Free
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+    <div class="p-6">
+      <h3 class="text-lg font-semibold mb-2">Shorten</h3>
+      <p class="text-gray-600">Turn long URLs into clean, short links.</p>
+    </div>
+    <div class="p-6">
+      <h3 class="text-lg font-semibold mb-2">Track</h3>
+      <p class="text-gray-600">See how many clicks your links get.</p>
+    </div>
+    <div class="p-6">
+      <h3 class="text-lg font-semibold mb-2">Analyze</h3>
+      <p class="text-gray-600">Geographic breakdown of your visitors.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
