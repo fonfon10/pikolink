@@ -1,5 +1,39 @@
 {% extends "base.html" %}
-{% block title %}Team Dashboard - PikoLink{% endblock %}
+{% block title %}{{ team.name }} - PikoLink{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-6">Team Dashboard</h2>
+<div class="max-w-4xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">{{ team.name }}</h2>
+    {% if is_owner %}
+    <a href="{% url 'teams:invite_member' team.slug %}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Invite Member</a>
+    {% endif %}
+  </div>
+
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h3 class="text-lg font-semibold mb-4">Members</h3>
+    <table class="w-full text-left">
+      <thead>
+        <tr>
+          <th class="pb-2 text-sm font-semibold text-gray-600">Email</th>
+          <th class="pb-2 text-sm font-semibold text-gray-600">Role</th>
+          <th class="pb-2 text-sm font-semibold text-gray-600">Joined</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-t">
+          <td class="py-2">{{ team.owner.email }}</td>
+          <td class="py-2"><span class="text-indigo-600 font-medium">Owner</span></td>
+          <td class="py-2 text-sm text-gray-500">{{ team.created_at|date:"M d, Y" }}</td>
+        </tr>
+        {% for m in members %}
+        <tr class="border-t">
+          <td class="py-2">{{ m.user.email }}</td>
+          <td class="py-2">{{ m.get_role_display }}</td>
+          <td class="py-2 text-sm text-gray-500">{{ m.joined|date:"M d, Y" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}
