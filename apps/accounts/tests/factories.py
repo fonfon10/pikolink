@@ -13,5 +13,11 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     email = factory.LazyAttribute(lambda _: fake.unique.email())
     username = factory.LazyAttribute(lambda o: o.email.split('@')[0])
-    password = factory.PostGenerationMethodCall('set_password', 'testpass123')
     email_verified = True
+
+    @factory.post_generation
+    def password(self, create, extracted, **kwargs):
+        password = extracted or 'testpass123'
+        self.set_password(password)
+        if create:
+            self.save(update_fields=['password'])

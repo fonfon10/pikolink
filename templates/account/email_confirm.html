@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Confirm Email - PikoLink{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto text-center">
+  <h2 class="text-2xl font-bold mb-4">Confirm Email Address</h2>
+  {% if confirmation %}
+    <p class="text-gray-600 mb-4">Please confirm that <strong>{{ confirmation.email_address.email }}</strong> is your email address.</p>
+    <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+      {% csrf_token %}
+      <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">Confirm</button>
+    </form>
+  {% else %}
+    <p class="text-red-600">This confirmation link is invalid or has expired.</p>
+  {% endif %}
+</div>
+{% endblock %}

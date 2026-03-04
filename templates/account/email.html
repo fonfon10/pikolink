@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Email Addresses - PikoLink{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Email Addresses</h2>
+  {% if emailaddresses %}
+    <ul class="mb-4 space-y-2">
+      {% for emailaddress in emailaddresses %}
+        <li class="p-3 bg-white rounded-lg border">
+          {{ emailaddress.email }}
+          {% if emailaddress.verified %}<span class="text-green-600 text-sm ml-2">Verified</span>{% endif %}
+          {% if emailaddress.primary %}<span class="text-indigo-600 text-sm ml-2">Primary</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}
