@@ -12,6 +12,7 @@
       <thead class="bg-gray-50">
         <tr>
           <th class="px-4 py-3 text-sm font-semibold text-gray-600">Email</th>
+          <th class="px-4 py-3 text-sm font-semibold text-gray-600">Name</th>
           <th class="px-4 py-3 text-sm font-semibold text-gray-600">Joined</th>
           <th class="px-4 py-3 text-sm font-semibold text-gray-600">Links</th>
           <th class="px-4 py-3 text-sm font-semibold text-gray-600">Verified</th>
@@ -23,11 +24,14 @@
       <tbody>
       {% for user in users %}
         <tr class="border-t hover:bg-gray-50">
-          <td class="px-4 py-3">{{ user.email }}</td>
+          <td class="px-4 py-3">
+            <a href="{% url 'super_admin_user_profile' user.pk %}" class="text-indigo-600 hover:underline">{{ user.email }}</a>
+          </td>
+          <td class="px-4 py-3 text-sm text-gray-500">{{ user.get_full_name|default:"-" }}</td>
           <td class="px-4 py-3 text-sm text-gray-500">{{ user.date_joined|date:"M d, Y" }}</td>
           <td class="px-4 py-3">{{ user.link_count }}</td>
           <td class="px-4 py-3">
-            {% if user.email_verified %}
+            {% if user.is_verified %}
               <span class="text-green-600">Yes</span>
             {% else %}
               <span class="text-red-600">No</span>

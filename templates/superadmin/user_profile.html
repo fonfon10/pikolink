@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}{{ profile_user.email }} - PikoLink Admin{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">User Profile</h2>
+    <a href="{% url 'super_admin_users' %}" class="text-indigo-600 hover:underline">Back to Users</a>
+  </div>
+
+  <div class="bg-white shadow rounded-lg p-6 space-y-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <p class="text-sm font-medium text-gray-500">Email</p>
+        <p class="text-gray-900">{{ profile_user.email }}</p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Name</p>
+        <p class="text-gray-900">{{ profile_user.get_full_name|default:"-" }}</p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Joined</p>
+        <p class="text-gray-900">{{ profile_user.date_joined|date:"M d, Y H:i" }}</p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Last Login</p>
+        <p class="text-gray-900">{{ profile_user.last_login|date:"M d, Y H:i"|default:"-" }}</p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Email Verified</p>
+        <p>
+          {% if profile_user.is_verified %}
+            <span class="text-green-600 font-medium">Yes</span>
+          {% else %}
+            <span class="text-red-600 font-medium">No</span>
+          {% endif %}
+        </p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Status</p>
+        <p>
+          {% if profile_user.is_active %}
+            <span class="inline-block px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Active</span>
+          {% else %}
+            <span class="inline-block px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Inactive</span>
+          {% endif %}
+        </p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Role</p>
+        <p class="text-gray-900">{% if profile_user.is_super_admin %}Super Admin{% elif profile_user.is_staff %}Staff{% else %}User{% endif %}</p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500">Links Created</p>
+        <p class="text-gray-900">{{ profile_user.links.count }}</p>
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="flex items-center gap-2 flex-wrap">
+      <form method="post" action="{% url 'super_admin_toggle_user' profile_user.pk %}">
+        {% csrf_token %}
+        {% if profile_user.is_active %}
+          <button type="submit" class="px-3 py-2 text-sm font-medium rounded bg-yellow-100 text-yellow-800 hover:bg-yellow-200">Deactivate</button>
+        {% else %}
+          <button type="submit" class="px-3 py-2 text-sm font-medium rounded bg-green-100 text-green-800 hover:bg-green-200">Activate</button>
+        {% endif %}
+      </form>
+
+      <form method="post" action="{% url 'super_admin_reset_password' profile_user.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="px-3 py-2 text-sm font-medium rounded bg-blue-100 text-blue-800 hover:bg-blue-200">Reset Password</button>
+      </form>
+
+      <form method="post" action="{% url 'super_admin_delete_user' profile_user.pk %}" onsubmit="return confirm('Are you sure you want to delete {{ profile_user.email }}? This cannot be undone.')">
+        {% csrf_token %}
+        <button type="submit" class="px-3 py-2 text-sm font-medium rounded bg-red-100 text-red-800 hover:bg-red-200">Delete User</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

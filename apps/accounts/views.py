@@ -35,11 +35,17 @@ def admin_dashboard(request):
 
 @super_admin_required
 def admin_users(request):
+    from allauth.account.models import EmailAddress
     users = (
         CustomUser.objects.all()
         .annotate(link_count=Count('links'))
         .order_by('-date_joined')
     )
+    verified_emails = set(
+        EmailAddress.objects.filter(verified=True).values_list('email', flat=True)
+    )
+    for user in users:
+        user.is_verified = user.email in verified_emails
     return render(request, 'superadmin/users.html', {'users': users})
 
 
@@ -64,6 +70,16 @@ def admin_teams(request):
         .order_by('-created_at')
     )
     return render(request, 'superadmin/teams.html', {'teams': teams})
+
+
+@super_admin_required
+def admin_user_profile(request, user_id):
+    from allauth.account.models import EmailAddress
+    user = get_object_or_404(CustomUser, pk=user_id)
+    user.is_verified = EmailAddress.objects.filter(
+        email=user.email, verified=True
+    ).exists()
+    return render(request, 'superadmin/user_profile.html', {'profile_user': user})
 
 
 @super_admin_required
