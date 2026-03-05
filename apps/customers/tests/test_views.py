@@ -195,6 +195,48 @@ class TestCustomerSearchAPI:
 
 
 @pytest.mark.django_db
+class TestCustomerQuickCreate:
+    def test_requires_login(self, client):
+        response = client.post(
+            '/customers/api/quick-create/',
+            json.dumps({'first_name': 'A', 'last_name': 'B'}),
+            content_type='application/json',
+        )
+        assert response.status_code == 302
+
+    def test_creates_customer(self, client):
+        user = UserFactory()
+        client.force_login(user)
+        response = client.post(
+            '/customers/api/quick-create/',
+            json.dumps({'first_name': 'Jane', 'last_name': 'Doe', 'email': 'j@test.com', 'company': 'Acme'}),
+            content_type='application/json',
+        )
+        assert response.status_code == 200
+        data = json.loads(response.content)
+        assert data['name'] == 'Jane Doe'
+        assert Customer.objects.filter(pk=data['id'], owner=user).exists()
+
+    def test_requires_first_and_last_name(self, client):
+        user = UserFactory()
+        client.force_login(user)
+        response = client.post(
+            '/customers/api/quick-create/',
+            json.dumps({'first_name': '', 'last_name': 'Doe'}),
+            content_type='application/json',
+        )
+        data = json.loads(response.content)
+        assert response.status_code == 400
+        assert 'error' in data
+
+    def test_rejects_get(self, client):
+        user = UserFactory()
+        client.force_login(user)
+        response = client.get('/customers/api/quick-create/')
+        assert response.status_code == 405
+
+
+@pytest.mark.django_db
 class TestLinkCustomerTagging:
     def test_create_link_with_customers(self, client):
         user = UserFactory()

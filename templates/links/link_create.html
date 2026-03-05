@@ -24,6 +24,23 @@
       </div>
       <div id="selected-customers" class="flex flex-wrap gap-2 mt-2"></div>
       <input type="hidden" name="customer_ids" id="customer-ids" value="">
+      <!-- Quick-add form (hidden by default) -->
+      <div id="quick-add-form" class="hidden mt-3 p-4 bg-gray-50 border rounded-lg space-y-3">
+        <p class="text-sm font-medium text-gray-700">New Customer</p>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="text" id="qa-first" placeholder="First name *" class="px-3 py-2 border rounded-lg text-sm">
+          <input type="text" id="qa-last" placeholder="Last name *" class="px-3 py-2 border rounded-lg text-sm">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="email" id="qa-email" placeholder="Email" class="px-3 py-2 border rounded-lg text-sm">
+          <input type="text" id="qa-company" placeholder="Company" class="px-3 py-2 border rounded-lg text-sm">
+        </div>
+        <div class="flex space-x-2">
+          <button type="button" id="qa-save" class="bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-indigo-700">Add & Tag</button>
+          <button type="button" id="qa-cancel" class="bg-gray-200 text-gray-700 px-4 py-1.5 rounded-lg text-sm hover:bg-gray-300">Cancel</button>
+        </div>
+        <p id="qa-error" class="text-red-500 text-sm hidden"></p>
+      </div>
     </div>
     <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">Shorten</button>
   </form>
@@ -35,6 +52,8 @@
   const resultsDiv = document.getElementById('customer-results');
   const selectedDiv = document.getElementById('selected-customers');
   const hiddenInput = document.getElementById('customer-ids');
+  const quickAddForm = document.getElementById('quick-add-form');
+  const qaError = document.getElementById('qa-error');
   const selected = new Map();
   let debounceTimer;
 
@@ -57,6 +76,18 @@
     });
   }
 
+  function addNewCustomerOption() {
+    const div = document.createElement('div');
+    div.className = 'px-4 py-2 hover:bg-indigo-50 cursor-pointer text-sm text-indigo-600 font-medium border-t';
+    div.textContent = '+ Add new customer';
+    div.addEventListener('click', function() {
+      resultsDiv.classList.add('hidden');
+      quickAddForm.classList.remove('hidden');
+      document.getElementById('qa-first').focus();
+    });
+    resultsDiv.appendChild(div);
+  }
+
   searchInput.addEventListener('input', function() {
     clearTimeout(debounceTimer);
     const q = this.value.trim();
@@ -67,7 +98,7 @@
         .then(data => {
           resultsDiv.innerHTML = '';
           if (data.length === 0) {
-            resultsDiv.innerHTML = '<div class="px-4 py-2 text-gray-500 text-sm">No results</div>';
+            resultsDiv.innerHTML = '<div class="px-4 py-2 text-gray-500 text-sm">No customers found</div>';
           }
           data.forEach(c => {
             if (selected.has(c.id)) return;
@@ -83,9 +114,52 @@
             });
             resultsDiv.appendChild(div);
           });
+          addNewCustomerOption();
           resultsDiv.classList.remove('hidden');
         });
     }, 200);
+  });
+
+  document.getElementById('qa-cancel').addEventListener('click', function() {
+    quickAddForm.classList.add('hidden');
+    qaError.classList.add('hidden');
+  });
+
+  document.getElementById('qa-save').addEventListener('click', function() {
+    const first = document.getElementById('qa-first').value.trim();
+    const last = document.getElementById('qa-last').value.trim();
+    const email = document.getElementById('qa-email').value.trim();
+    const company = document.getElementById('qa-company').value.trim();
+    qaError.classList.add('hidden');
+    if (!first || !last) {
+      qaError.textContent = 'First and last name are required.';
+      qaError.classList.remove('hidden');
+      return;
+    }
+    fetch('/customers/api/quick-create/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+      },
+      body: JSON.stringify({ first_name: first, last_name: last, email: email, company: company }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) {
+          qaError.textContent = data.error;
+          qaError.classList.remove('hidden');
+          return;
+        }
+        selected.set(data.id, data.name);
+        updateHidden();
+        renderSelected();
+        quickAddForm.classList.add('hidden');
+        document.getElementById('qa-first').value = '';
+        document.getElementById('qa-last').value = '';
+        document.getElementById('qa-email').value = '';
+        document.getElementById('qa-company').value = '';
+      });
   });
 
   document.addEventListener('click', function(e) {

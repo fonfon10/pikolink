@@ -129,3 +129,30 @@ def customer_search_api(request):
         for c in customers
     ]
     return JsonResponse(results, safe=False)
+
+
+@login_required
+def customer_quick_create(request):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    import json
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    first_name = data.get('first_name', '').strip()
+    last_name = data.get('last_name', '').strip()
+    if not first_name or not last_name:
+        return JsonResponse({'error': 'First and last name are required'}, status=400)
+    customer = Customer.objects.create(
+        owner=request.user,
+        first_name=first_name,
+        last_name=last_name,
+        email=data.get('email', '').strip(),
+        company=data.get('company', '').strip(),
+    )
+    return JsonResponse({
+        'id': customer.id,
+        'name': str(customer),
+        'company': customer.company,
+    })

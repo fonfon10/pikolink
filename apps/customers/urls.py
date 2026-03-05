@@ -11,4 +11,5 @@ urlpatterns = [
     path('<int:pk>/delete/', views.customer_delete, name='customer_delete'),
     path('import/', views.customer_import, name='customer_import'),
     path('api/search/', views.customer_search_api, name='customer_search_api'),
+    path('api/quick-create/', views.customer_quick_create, name='customer_quick_create'),
 ]
