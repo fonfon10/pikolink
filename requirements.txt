@@ -9,3 +9,4 @@ user-agents==2.2.0
 django-extensions==3.2.3
 Pillow==10.2.0
 dj-database-url==2.1.0
+django-anymail[mailersend]==14.0
