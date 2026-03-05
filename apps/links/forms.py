@@ -4,6 +4,8 @@ from .models import Link
 
 
 class LinkCreateForm(forms.ModelForm):
+    customer_ids = forms.CharField(required=False, widget=forms.HiddenInput())
+
     class Meta:
         model = Link
         fields = ('original_url', 'title')

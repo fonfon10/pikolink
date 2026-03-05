@@ -14,6 +14,19 @@
     <p class="text-sm text-gray-500">Created {{ link.created_at|date:"M d, Y" }}</p>
   </div>
 
+  {% if tagged_customers %}
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h3 class="text-lg font-semibold mb-4">Tagged Customers</h3>
+    <div class="flex flex-wrap gap-2">
+      {% for customer in tagged_customers %}
+        <span class="inline-flex items-center bg-indigo-100 text-indigo-800 text-sm px-3 py-1 rounded-full">
+          {{ customer.first_name }} {{ customer.last_name }}{% if customer.company %} — {{ customer.company }}{% endif %}
+        </span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
   {% if daily_clicks %}
   <div class="bg-white shadow rounded-lg p-6 mb-6">
     <h3 class="text-lg font-semibold mb-4">Clicks (Last 30 Days)</h3>

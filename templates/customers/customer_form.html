@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - PikoLink{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto">
+  <h2 class="text-2xl font-bold mb-6">{{ title }}</h2>
+  <form method="post" class="bg-white shadow rounded-lg p-6 space-y-4">
+    {% csrf_token %}
+    {% for field in form %}
+    <div>
+      <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ field.errors.0 }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <div class="flex space-x-3">
+      <button type="submit" class="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">Save</button>
+      <a href="{% url 'customers:customer_list' %}" class="flex-1 text-center bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

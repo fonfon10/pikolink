@@ -13,6 +13,9 @@ class Link(models.Model):
     short_code = models.CharField(max_length=10, unique=True, db_index=True)
     title = models.CharField(max_length=255, blank=True)
     click_count = models.PositiveIntegerField(default=0)
+    customers = models.ManyToManyField(
+        'customers.Customer', blank=True, related_name='links'
+    )
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

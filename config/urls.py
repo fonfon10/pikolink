@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('apps.links.urls')),
     path('accounts/', include('apps.accounts.urls')),
     path('teams/', include('apps.teams.urls')),
+    path('customers/', include('apps.customers.urls')),
     path('analytics/', include('apps.analytics.urls')),
     path('super-admin/', account_views.admin_dashboard, name='super_admin_dashboard'),
     path('super-admin/users/', account_views.admin_users, name='super_admin_users'),

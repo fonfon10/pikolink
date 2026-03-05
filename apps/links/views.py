@@ -4,6 +4,7 @@ from django.http import HttpResponseGone, HttpResponseNotAllowed, HttpResponsePe
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.analytics.models import Click
+from apps.customers.models import Customer
 from apps.links.forms import LinkCreateForm
 from apps.links.models import Link
 from apps.links.utils import generate_short_code
@@ -28,6 +29,11 @@ def create_link(request):
             link.owner = request.user
             link.short_code = generate_short_code()
             link.save()
+            customer_ids = form.cleaned_data.get('customer_ids', '')
+            if customer_ids:
+                ids = [int(x) for x in customer_ids.split(',') if x.strip().isdigit()]
+                customers = Customer.objects.filter(id__in=ids, owner=request.user)
+                link.customers.set(customers)
             return redirect('links:dashboard')
     else:
         form = LinkCreateForm()
@@ -69,6 +75,7 @@ def link_detail(request, pk):
         Click.objects.filter(link=link)
         .order_by('-clicked_at')[:10]
     )
+    tagged_customers = link.customers.all()
     return render(request, 'links/link_detail.html', {
         'link': link,
         'top_countries': top_countries,
@@ -76,6 +83,7 @@ def link_detail(request, pk):
         'daily_clicks': daily_clicks,
         'max_daily': max_daily,
         'recent_clicks': recent_clicks,
+        'tagged_customers': tagged_customers,
     })
 
 

@@ -3,18 +3,96 @@
 {% block content %}
 <div class="max-w-lg mx-auto">
   <h2 class="text-2xl font-bold mb-6">Create a Short Link</h2>
-  <form method="post" class="bg-white shadow rounded-lg p-6 space-y-4">
+  <form method="post" id="link-form" class="bg-white shadow rounded-lg p-6 space-y-4">
     {% csrf_token %}
     {% for field in form %}
-    <div>
-      <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
-      {{ field }}
-      {% if field.errors %}
-      <p class="text-red-500 text-sm mt-1">{{ field.errors.0 }}</p>
+      {% if field.name != "customer_ids" %}
+      <div>
+        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <p class="text-red-500 text-sm mt-1">{{ field.errors.0 }}</p>
+        {% endif %}
+      </div>
       {% endif %}
-    </div>
     {% endfor %}
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Tag Customers</label>
+      <div class="relative">
+        <input type="text" id="customer-search" placeholder="Search customers..." autocomplete="off" class="w-full px-4 py-2 border rounded-lg">
+        <div id="customer-results" class="absolute z-10 w-full bg-white border rounded-lg shadow-lg mt-1 hidden max-h-48 overflow-y-auto"></div>
+      </div>
+      <div id="selected-customers" class="flex flex-wrap gap-2 mt-2"></div>
+      <input type="hidden" name="customer_ids" id="customer-ids" value="">
+    </div>
     <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">Shorten</button>
   </form>
 </div>
+
+<script>
+(function() {
+  const searchInput = document.getElementById('customer-search');
+  const resultsDiv = document.getElementById('customer-results');
+  const selectedDiv = document.getElementById('selected-customers');
+  const hiddenInput = document.getElementById('customer-ids');
+  const selected = new Map();
+  let debounceTimer;
+
+  function updateHidden() {
+    hiddenInput.value = Array.from(selected.keys()).join(',');
+  }
+
+  function renderSelected() {
+    selectedDiv.innerHTML = '';
+    selected.forEach((name, id) => {
+      const chip = document.createElement('span');
+      chip.className = 'inline-flex items-center bg-indigo-100 text-indigo-800 text-sm px-3 py-1 rounded-full';
+      chip.innerHTML = name + ' <button type="button" data-id="' + id + '" class="ml-1 text-indigo-600 hover:text-indigo-900">&times;</button>';
+      chip.querySelector('button').addEventListener('click', function() {
+        selected.delete(id);
+        updateHidden();
+        renderSelected();
+      });
+      selectedDiv.appendChild(chip);
+    });
+  }
+
+  searchInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    const q = this.value.trim();
+    if (q.length < 1) { resultsDiv.classList.add('hidden'); return; }
+    debounceTimer = setTimeout(function() {
+      fetch('/customers/api/search/?q=' + encodeURIComponent(q))
+        .then(r => r.json())
+        .then(data => {
+          resultsDiv.innerHTML = '';
+          if (data.length === 0) {
+            resultsDiv.innerHTML = '<div class="px-4 py-2 text-gray-500 text-sm">No results</div>';
+          }
+          data.forEach(c => {
+            if (selected.has(c.id)) return;
+            const div = document.createElement('div');
+            div.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm';
+            div.textContent = c.name + (c.company ? ' — ' + c.company : '');
+            div.addEventListener('click', function() {
+              selected.set(c.id, c.name);
+              updateHidden();
+              renderSelected();
+              searchInput.value = '';
+              resultsDiv.classList.add('hidden');
+            });
+            resultsDiv.appendChild(div);
+          });
+          resultsDiv.classList.remove('hidden');
+        });
+    }, 200);
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!resultsDiv.contains(e.target) && e.target !== searchInput) {
+      resultsDiv.classList.add('hidden');
+    }
+  });
+})();
+</script>
 {% endblock %}

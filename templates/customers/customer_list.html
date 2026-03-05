@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Customers - PikoLink{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-2xl font-bold">Customers</h2>
+  <div class="flex space-x-2">
+    <a href="{% url 'customers:customer_import' %}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">Import CSV</a>
+    <a href="{% url 'customers:customer_add' %}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Add Customer</a>
+  </div>
+</div>
+
+<form method="get" class="mb-4">
+  <input type="text" name="q" value="{{ search_query }}" placeholder="Search customers..." class="w-full px-4 py-2 border rounded-lg">
+</form>
+
+{% if customers %}
+<div class="bg-white shadow rounded-lg overflow-hidden">
+  <table class="w-full text-left">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">Name</th>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">Email</th>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">Company</th>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600">Links</th>
+        <th class="px-4 py-3 text-sm font-semibold text-gray-600"></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for customer in customers %}
+      <tr class="border-t hover:bg-gray-50">
+        <td class="px-4 py-3">{{ customer.first_name }} {{ customer.last_name }}</td>
+        <td class="px-4 py-3 text-sm text-gray-700">{{ customer.email|default:"—" }}</td>
+        <td class="px-4 py-3 text-sm text-gray-700">{{ customer.company|default:"—" }}</td>
+        <td class="px-4 py-3 text-sm text-gray-700">{{ customer.links.count }}</td>
+        <td class="px-4 py-3 text-right space-x-2">
+          <a href="{% url 'customers:customer_edit' customer.pk %}" class="text-indigo-600 hover:underline text-sm">Edit</a>
+          <form method="post" action="{% url 'customers:customer_delete' customer.pk %}" class="inline" onsubmit="return confirm('Delete this customer?')">
+            {% csrf_token %}
+            <button type="submit" class="text-red-500 hover:text-red-700 text-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="bg-white shadow rounded-lg p-8 text-center text-gray-500">
+  {% if search_query %}
+    <p>No customers match "{{ search_query }}".</p>
+  {% else %}
+    <p>You haven't added any customers yet.</p>
+    <a href="{% url 'customers:customer_add' %}" class="mt-4 inline-block text-indigo-600 hover:underline">Add your first customer</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}
