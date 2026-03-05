@@ -26,6 +26,7 @@
           <a href="/dashboard/" class="text-gray-600 hover:text-indigo-600">Dashboard</a>
           <a href="/analytics/realtime/" class="text-gray-600 hover:text-indigo-600">Real-Time</a>
           <a href="/teams/" class="text-gray-600 hover:text-indigo-600">Teams</a>
+          <a href="{% url 'profile' %}" class="text-gray-600 hover:text-indigo-600">Profile</a>
           {% if user.is_super_admin %}
             <a href="/super-admin/" class="text-gray-600 hover:text-indigo-600">Admin</a>
           {% endif %}
@@ -47,6 +48,7 @@
           <a href="/dashboard/" class="block text-gray-600 hover:text-indigo-600 py-1">Dashboard</a>
           <a href="/analytics/realtime/" class="block text-gray-600 hover:text-indigo-600 py-1">Real-Time</a>
           <a href="/teams/" class="block text-gray-600 hover:text-indigo-600 py-1">Teams</a>
+          <a href="{% url 'profile' %}" class="block text-gray-600 hover:text-indigo-600 py-1">Profile</a>
           {% if user.is_super_admin %}
             <a href="/super-admin/" class="block text-gray-600 hover:text-indigo-600 py-1">Admin</a>
           {% endif %}
