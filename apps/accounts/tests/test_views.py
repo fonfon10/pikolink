@@ -139,3 +139,42 @@ class TestDashboardAccess:
         response = client.get('/dashboard/')
         assert response.status_code == 302
         assert '/accounts/login/' in response.url
+
+
+@pytest.mark.django_db
+class TestProfileView:
+    def test_profile_page_loads(self, client):
+        user = UserFactory(email='profile@example.com')
+        client.force_login(user)
+        response = client.get('/accounts/profile/')
+        assert response.status_code == 200
+        assert 'profile@example.com' in response.content.decode()
+
+    def test_profile_update_name(self, client):
+        user = UserFactory(email='namechange@example.com')
+        client.force_login(user)
+        response = client.post('/accounts/profile/', {
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'email': 'namechange@example.com',
+        })
+        assert response.status_code == 302
+        user.refresh_from_db()
+        assert user.first_name == 'John'
+        assert user.last_name == 'Doe'
+
+    def test_profile_update_email(self, client):
+        user = UserFactory(email='oldemail@example.com')
+        client.force_login(user)
+        client.post('/accounts/profile/', {
+            'first_name': '',
+            'last_name': '',
+            'email': 'newemail@example.com',
+        })
+        user.refresh_from_db()
+        assert user.email == 'newemail@example.com'
+
+    def test_profile_requires_login(self, client):
+        response = client.get('/accounts/profile/')
+        assert response.status_code == 302
+        assert '/accounts/login/' in response.url
